@@ -10,6 +10,31 @@ A personal portfolio built with Next.js App Router, React, TypeScript, Tailwind 
 4. Start the development server: `npm run dev`
 5. Open `http://localhost:3000`.
 
+## Animated background
+
+The homepage uses [animated-backgrounds](https://github.com/umerfarok/animated-backgrounds)
+to show an interactive starry-night animation behind the page content.
+
+## Supabase schema and access
+
+Apply `supabase/migrations/20261027120000_portfolio_rls.sql` to your Supabase
+project. Then, in the Supabase SQL Editor, configure the one allowed project
+editor by replacing the UUID below with your user ID from Supabase Auth:
+
+```sql
+insert into private.portfolio_settings (singleton, owner_id)
+values (true, 'YOUR_SUPABASE_AUTH_USER_UUID')
+on conflict (singleton)
+do update set owner_id = excluded.owner_id;
+```
+
+Without this configuration, project edits are denied. Published projects are
+readable without signing in; only the configured owner can create, edit, or
+delete projects. Contact submissions allow anonymous inserts only, with no
+public read access. The database also enforces a honeypot field, input length
+limits, and a limit of three submissions per email address in 15 minutes.
+The contact form should submit an empty `website` field as its honeypot.
+
 ## Deployment
 
 This project uses Next.js App Router and can be deployed to Vercel from the repository.
@@ -38,11 +63,13 @@ Live URL: _Add after deployment._
 
 ## AI tool disclosure
 
-_Add a short description of how AI tools were used while building this project._
+AI was used as a coding partner to spot errors, suggest ways to fix them, and
+help write or improve code where needed. Changes were reviewed and tested as
+part of development.
 
 ## Project status
 
 The portfolio homepage, blog, resume, and local development editors use the
-Next.js App Router. Contact handling, authentication, and database access are
-still placeholders and need to be implemented before those features are
-available in production.
+Next.js App Router. The Supabase schema and access policies are defined, but
+the contact form, authenticated admin workflow, and application database
+integration still need to be connected before those features are available.
