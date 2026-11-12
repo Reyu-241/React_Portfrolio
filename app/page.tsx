@@ -142,7 +142,6 @@ export default function Home() {
           <div className="skills-list">
             {skills.map((skill) => <span className="skill-chip" key={skill}><span>✦</span>{skill}</span>)}
           </div>
-          <p className="edit-note">✎ Edit the <code>skills</code> array near the top of <code>app/page.tsx</code>.</p>
         </section>
 
         <section className="section" id="projects">
@@ -176,7 +175,6 @@ export default function Home() {
               </article>
             ))}
           </div>
-          <p className="edit-note">✎ Update the <code>projects</code> array near the top of <code>app/page.tsx</code>.</p>
         </section>
 
         <section className="section contact-section" id="contact">
