@@ -35,6 +35,12 @@ public read access. The database also enforces a honeypot field, input length
 limits, and a limit of three submissions per email address in 15 minutes.
 The contact form should submit an empty `website` field as its honeypot.
 
+To sign in to the admin area, create the owner account in Supabase Auth, add
+its user UUID to `private.portfolio_settings` using the SQL above, and open
+`/admin/login`. Use the account's email and password; successful sign-in
+redirects to `/admin/projects`. Project-management pages are still under
+development.
+
 ## Deployment
 
 This project uses Next.js App Router and can be deployed to Vercel from the repository.
@@ -70,6 +76,6 @@ part of development.
 ## Project status
 
 The portfolio homepage, blog, resume, and local development editors use the
-Next.js App Router. The Supabase schema and access policies are defined, but
-the contact form, authenticated admin workflow, and application database
-integration still need to be connected before those features are available.
+Next.js App Router. The Supabase sign-in page and database access policies are
+connected. The contact form and authenticated project-management workflow are
+still under development.
