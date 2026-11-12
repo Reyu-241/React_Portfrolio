@@ -17,9 +17,9 @@ to show an interactive starry-night animation behind the page content.
 
 ## Supabase schema and access
 
-Apply `supabase/migrations/20261027120000_portfolio_rls.sql` to your Supabase
-project. Then, in the Supabase SQL Editor, configure the one allowed project
-editor by replacing the UUID below with your user ID from Supabase Auth:
+Apply the SQL files in `supabase/migrations/` to your Supabase project in
+filename order. Then, in the Supabase SQL Editor, configure the one allowed
+project editor by replacing the UUID below with your user ID from Supabase Auth:
 
 ```sql
 insert into private.portfolio_settings (singleton, owner_id)
@@ -30,16 +30,22 @@ do update set owner_id = excluded.owner_id;
 
 Without this configuration, project edits are denied. Published projects are
 readable without signing in; only the configured owner can create, edit, or
-delete projects. Contact submissions allow anonymous inserts only, with no
-public read access. The database also enforces a honeypot field, input length
-limits, and a limit of three submissions per email address in 15 minutes.
-The contact form should submit an empty `website` field as its honeypot.
+delete projects. Contact submissions allow anonymous inserts, but only the
+configured owner can read them. The database enforces a honeypot field, input
+length limits, and a limit of three submissions per email address in 15 minutes.
+The contact form should submit an empty `website` field as its honeypot. For
+stronger production spam protection, add CAPTCHA and/or rate limiting at the
+API or edge layer; email-based database limits can be bypassed with different
+addresses.
 
-To sign in to the admin area, create the owner account in Supabase Auth, add
-its user UUID to `private.portfolio_settings` using the SQL above, and open
-`/admin/login`. Use the account's email and password; successful sign-in
-redirects to `/admin/projects`. Project-management pages are still under
-development.
+To sign in to the admin area, disable public sign-ups in Supabase Auth settings,
+create or invite your owner account, add its user UUID to
+`private.portfolio_settings` using the SQL above, and open `/admin/login`. Use
+the account's email and password; successful sign-in opens `/admin/projects`,
+where you can create, edit, publish, and delete projects. Use the Contact
+messages link to view submissions. The SQL assignment is the authorization
+control: another authenticated user cannot read contact submissions or change
+projects. Never put a Supabase service-role key in client-side code.
 
 ## Deployment
 
@@ -76,6 +82,5 @@ part of development.
 ## Project status
 
 The portfolio homepage, blog, resume, and local development editors use the
-Next.js App Router. The Supabase sign-in page and database access policies are
-connected. The contact form and authenticated project-management workflow are
-still under development.
+Next.js App Router. Supabase Auth protects the project-management dashboard and
+contact-message inbox. The public contact form is still under development.
