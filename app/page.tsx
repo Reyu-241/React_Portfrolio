@@ -1,7 +1,11 @@
-"use client";
-
 import Link from "next/link";
-import { AnimatedBackground } from "animated-backgrounds";
+import Galaxy from "@/components/Galaxy";
+import {
+  defaultHomepageContent,
+  isHomepageContent,
+  isHomepageContentTableMissing,
+} from "@/lib/homepage-content";
+import { createClient } from "@/lib/supabase/server";
 
 const projects = [
   {
@@ -27,42 +31,51 @@ const projects = [
   },
 ];
 
-const skills = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Python",
-  "SQL",
-  "Git & GitHub",
-];
+export default async function Home() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("homepage_content")
+    .select("content")
+    .eq("id", true)
+    .maybeSingle();
 
-export default function Home() {
+  if (error && !isHomepageContentTableMissing(error)) {
+    throw new Error(`Homepage content could not be loaded: ${error.message}`);
+  }
+
+  if (error) {
+    console.warn(
+      "Homepage content storage is unavailable. Apply the homepage_content Supabase migration to enable saved content.",
+      error,
+    );
+  }
+
+  const content = (error ? undefined : data?.content) ?? defaultHomepageContent;
+  if (!isHomepageContent(content)) {
+    throw new Error("Saved homepage content has an invalid format.");
+  }
+
   return (
     <main>
       <div className="background" aria-hidden="true">
-        <AnimatedBackground
-          animationName="starryNight"
-          theme="portfolio"
-          interactive={true}
-          interactionConfig={{
-            effect: "attract",
-            strength: 0.45,
-            radius: 130,
-            continuous: false,
-          }}
-          adaptivePerformance={true}
-          fps={30}
-          style={{ opacity: 0.78 }}
+        <Galaxy
+          density={1.05}
+          glowIntensity={0.51}
+          flareIntensity={1.4}
+          starSpeed={0.5}
+          mouseRepulsion
+          clickWarp={false}
+          starColors={["#ffffff", "#44bcd0", "#b895f5", "#dffaff"]}
+          hueShift={38}
+          starSize={1.25}
+          twinkleIntensity={0.42}
         />
       </div>
 
       <div className="site-content">
         <header className="topbar">
           <a className="brand" href="#home" aria-label="Go to home">
-            <span className="brand-mark">✦</span> Angelo Pensalfine
+            <span className="brand-mark">✦</span> {content.name}
           </a>
           <nav aria-label="Main navigation">
             <a href="#about">About</a>
@@ -76,22 +89,21 @@ export default function Home() {
 
         <section className="hero section" id="home">
           <div className="hero-copy">
-            <p className="eyebrow"><span className="status-dot" /> AVAILABLE FOR OPPORTUNITIES</p>
+            <p className="eyebrow"><span className="status-dot" /> {content.availability}</p>
             <h1>
-              Turning ideas into
-              <span className="gradient-text"> digital experiences.</span>
+              {content.headline}
+              <span className="gradient-text">{content.headlineHighlight}</span>
             </h1>
             <p className="hero-description">
-              Hi, I&apos;m <strong>[Angelo Pensalfine]</strong> — a developer who enjoys
-              building useful, modern, and beautiful web applications.
+              {content.introduction}
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#projects">Explore my work <span>↗</span></a>
               <a className="button button-secondary" href="#contact">Get in touch</a>
             </div>
             <div className="hero-meta">
-              <span><span className="tiny-star">✦</span> Based in South Africa</span>
-              <span>Focused on web development</span>
+              <span><span className="tiny-star">✦</span> {content.location}</span>
+              <span>{content.focus}</span>
             </div>
           </div>
           <div className="orbit-art" aria-hidden="true">
@@ -112,18 +124,15 @@ export default function Home() {
         <section className="section about-section" id="about">
           <div className="section-heading">
             <p className="eyebrow">01 / ABOUT ME</p>
-            <h2>A little about <span className="gradient-text">my journey.</span></h2>
+            <h2>{content.aboutHeading}</h2>
           </div>
           <div className="about-grid">
             <div className="glass-card about-card">
               <div className="card-icon">⌘</div>
               <h3>Who I am</h3>
               <p>
-                I&apos;m a developer interested in both frontend and backend
-                development. I enjoy solving problems, learning new tools, and
-                turning ideas into practical applications.
+                {content.aboutDescription}
               </p>
-              <p className="edit-note">✎ Replace this paragraph with your own story.</p>
             </div>
             <div className="about-stats">
               <div className="glass-card stat-card"><strong>01</strong><span>Curiosity first</span></div>
@@ -140,7 +149,7 @@ export default function Home() {
             <p className="section-intro">A selection of tools I use and continue to develop my skills in.</p>
           </div>
           <div className="skills-list">
-            {skills.map((skill) => <span className="skill-chip" key={skill}><span>✦</span>{skill}</span>)}
+            {content.skills.map((skill) => <span className="skill-chip" key={skill}><span>✦</span>{skill}</span>)}
           </div>
         </section>
 
@@ -180,18 +189,19 @@ export default function Home() {
         <section className="section contact-section" id="contact">
           <div className="contact-panel">
             <p className="eyebrow">04 / CONTACT</p>
-            <h2>Have a project in <span className="gradient-text">mind?</span></h2>
-            <p>Have an opportunity, idea, or just want to connect? Send me a message.</p>
-            <a className="button button-primary" href="mailto:YOUR.EMAIL@example.com">Email me <span>↗</span></a>
+            <h2>{content.contactHeading}</h2>
+            <p>{content.contactDescription}</p>
+            <Link className="button button-primary" href="/contact">Send a commission <span>↗</span></Link>
             <div className="social-links">
-              <a href="https://github.com/YOUR-USERNAME" target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a href="https://www.linkedin.com/in/YOUR-USERNAME" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href={`mailto:${content.contactEmail}`}>Email ↗</a>
+              <a href={content.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href={content.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn ↗</a>
             </div>
           </div>
         </section>
 
         <footer className="footer">
-          <a className="brand" href="#home"><span className="brand-mark">✦</span> Angelo Pensalfine</a>
+          <a className="brand" href="#home"><span className="brand-mark">✦</span> {content.name}</a>
           <span>Designed among the stars · © {new Date().getFullYear()}</span>
           <a href="#home">Back to top ↑</a>
         </footer>

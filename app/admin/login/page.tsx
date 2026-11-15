@@ -1,7 +1,29 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import LoginForm from "./login-form";
 
-export default function AdminLoginPage() {
+export default async function AdminLoginPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError && userError.name !== "AuthSessionMissingError") {
+    throw new Error(`Unable to verify your Supabase session: ${userError.message}`);
+  }
+
+  if (user) {
+    const { data: isOwner, error } = await supabase.rpc("is_portfolio_owner");
+    if (error) {
+      throw new Error(`Unable to verify portfolio access: ${error.message}`);
+    }
+    if (isOwner) {
+      redirect("/admin/homepage");
+    }
+  }
+
   return (
     <main className="admin-login-main">
       <div className="admin-login-card">

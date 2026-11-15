@@ -9,15 +9,16 @@ export default function AdminShell({
   return (
     <section className="admin-shell">
       <header className="admin-header">
-        <Link className="admin-shell-brand" href="/admin/projects">
+        <Link className="admin-shell-brand" href="/admin/homepage">
           <span aria-hidden="true" className="brand-mark">
             ✦
           </span>
           PORTFOLIO ADMIN
         </Link>
         <nav aria-label="Admin navigation" className="admin-nav">
+          <Link href="/admin/homepage">Homepage</Link>
           <Link href="/admin/projects">Projects</Link>
-          <Link href="/admin/messages">Contact messages</Link>
+          <Link href="/admin/messages">Commissions</Link>
           <SignOutButton />
         </nav>
       </header>

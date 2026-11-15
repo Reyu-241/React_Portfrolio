@@ -14,10 +14,10 @@ export default async function AdminMessagesPage() {
         <div className="admin-content">
           <div className="admin-page-heading">
             <div>
-              <p className="eyebrow">INBOX</p>
-              <h1>Contact messages</h1>
+              <p className="eyebrow">INBOX · {messages?.length ?? 0} RECEIVED</p>
+              <h1>Commission inquiries</h1>
               <p className="admin-muted">
-                Messages submitted through your portfolio contact form.
+                Messages submitted by people interested in working with you.
               </p>
             </div>
           </div>
@@ -26,9 +26,9 @@ export default async function AdminMessagesPage() {
             <p className="admin-error" role="alert">
               Messages could not be loaded: {error.message}
             </p>
-          ) : messages.length === 0 ? (
+          ) : !messages?.length ? (
             <section className="admin-empty glass-card">
-              <h2>Your inbox is empty</h2>
+              <h2>No commission inquiries yet</h2>
               <p className="admin-muted">
                 New contact form submissions will appear here.
               </p>

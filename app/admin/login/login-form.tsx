@@ -30,7 +30,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.replace("/admin/projects");
+      router.replace("/admin/homepage");
       router.refresh();
     } catch (error) {
       setErrorMessage(
