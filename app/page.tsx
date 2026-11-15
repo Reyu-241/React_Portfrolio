@@ -13,21 +13,21 @@ const projects = [
     description:
       "A dashboard for managing patient records, appointments, and treatments.",
     tags: ["Next.js", "TypeScript", "SQL"],
-    link: "https://github.com/YOUR-USERNAME/YOUR-REPOSITORY",
+    link: "https://github.com/YOUR-Reyu-241/YOUR-REPOSITORY",
   },
   {
     name: "Project Two",
     description:
       "Replace this with a short explanation of another project you have built.",
     tags: ["React", "CSS", "API"],
-    link: "https://github.com/YOUR-USERNAME/YOUR-REPOSITORY",
+    link: "https://github.com/YOUR-Reyu-241/YOUR-REPOSITORY",
   },
   {
     name: "Project Three",
     description:
       "Use this card to highlight a project you are especially proud of.",
     tags: ["Python", "Automation"],
-    link: "https://github.com/YOUR-USERNAME/YOUR-REPOSITORY",
+    link: "https://github.com/YOUR-Reyu-241/YOUR-REPOSITORY",
   },
 ];
 
@@ -159,7 +159,7 @@ export default async function Home() {
               <p className="eyebrow">03 / SELECTED WORK</p>
               <h2>Projects from my <span className="gradient-text">universe.</span></h2>
             </div>
-            <a className="text-link" href="https://github.com/YOUR-USERNAME">View GitHub ↗</a>
+            <a className="text-link" href="https://github.com/YOUR-Reyu-241">View GitHub ↗</a>
           </div>
           <div className="project-grid">
             {projects.map((project, index) => (

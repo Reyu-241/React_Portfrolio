@@ -43,7 +43,7 @@ export const defaultHomepageContent: HomepageContent = {
   contactDescription:
     "Have an opportunity, idea, or just want to connect? Send me a message.",
   contactEmail: "YOUR.EMAIL@example.com",
-  githubUrl: "https://github.com/YOUR-USERNAME",
+  githubUrl: "https://github.com/YOUR-Reyu-241",
   linkedinUrl: "https://www.linkedin.com/in/YOUR-USERNAME",
 };
 

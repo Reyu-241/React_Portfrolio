@@ -103,45 +103,23 @@
   ],
   "aboutpara": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   "resume": {
-    "tagline": "\ud83d\udc4b  I'm a software engineer, product designer.",
-    "description": "I have delivered world-class user experiences to millions of people. Well-versed with React, Javascript, and most of the Web frameworks.",
-    "experiences": [
-      {
-        "id": "1",
-        "dates": "March 2022 - Present",
-        "type": "Full Time",
-        "position": "Frontend Engineer at X",
-        "bullets": "Bullet One, Bullet Two"
-      },
-      {
-        "id": "d495c23b-4f65-479a-9b8a-cfbc1c089725",
-        "dates": "July 2020 - March 2022",
-        "type": "Full Time",
-        "position": "Frontend Engineer at X",
-        "bullets": "Worked on the frontend of a React application, Worked on the frontend of a React application"
-      }
-    ],
+    "experiences": [],
     "education": {
-      "universityName": "University X",
-      "universityDate": "2016-2020",
-      "universityPara": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book"
+      "universityName": "IT Programming (college)",
+      "universityDate": "February 2026 to November 2026",
+      "universityPara": "Unicollege-West Rand Garden, Gauteng"
     },
     "languages": [
-      "Javascript",
-      "HTML5",
+      "SQL",
+      "JavaScript",
       "CSS",
+      "GitHub",
       "Python",
-      "Go"
+      "Git",
+      "TypeScript",
+      "HTML"
     ],
-    "frameworks": [
-      "React",
-      "Typescript",
-      "NodeJs"
-    ],
-    "others": [
-      "Figma",
-      "AdobeXD",
-      "AWS"
-    ]
+    "frameworks": [],
+    "others": []
   }
 }
