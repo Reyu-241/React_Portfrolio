@@ -12,8 +12,22 @@ A personal portfolio built with Next.js App Router, React, TypeScript, Tailwind 
 
 ## Animated background
 
-The homepage uses [animated-backgrounds](https://github.com/umerfarok/animated-backgrounds)
-to show an interactive starry-night animation behind the page content.
+The homepage combines two visual layers to create a space-themed design:
+
+- **Galaxy background:** The React Bits [Galaxy background](https://reactbits.dev/backgrounds/galaxy)
+  is rendered as a full-screen WebGL animation behind the page. It creates a
+  dynamic field of stars that moves gently and reacts to the user's pointer. The
+  Galaxy component is configured in `app/page.tsx` and is implemented in
+  `components/Galaxy.jsx`.
+- **Animated planet:** In the hero section, a decorative planet is built with
+  CSS. It uses a radial gradient, soft glow, atmospheric bands, and floating
+  animations to create the appearance of a planet. Elliptical orbit lines and
+  twinkling stars complete the scene.
+
+The Galaxy remains fixed while the page scrolls, while the planet belongs to
+the hero section and moves with the content. The planet animation includes a
+small vertical floating effect, and the surrounding stars gently change
+opacity and scale. These animations are located in `app/globals.css`.
 
 ## Supabase schema and access
 
