@@ -9,18 +9,18 @@ import { createClient } from "@/lib/supabase/server";
 
 const projects = [
   {
-    name: "Clinic Operations Dashboard",
+    name: "Pokedex",
     description:
-      "A dashboard for managing patient records, appointments, and treatments.",
-    tags: ["Next.js", "TypeScript", "SQL"],
-    link: "https://github.com/YOUR-Reyu-241/YOUR-REPOSITORY",
+      "A Pokedex project built with JavaScript, CSS, and HTML.",
+    tags: ["JavaScript", "CSS", "HTML"],
+    link: "https://github.com/Reyu-241/Pokedex",
   },
   {
-    name: "Project Two",
+    name: "Yellow Game",
     description:
-      "Replace this with a short explanation of another project you have built.",
-    tags: ["React", "CSS", "API"],
-    link: "https://github.com/YOUR-Reyu-241/YOUR-REPOSITORY",
+      "A Python and HTML game project.",
+    tags: ["Python", "HTML"],
+    link: "https://github.com/Reyu-241/Yellow-Game",
   },
   {
     name: "Project Three",
@@ -81,6 +81,7 @@ export default async function Home() {
             <a href="#about">About</a>
             <a href="#skills">Skills</a>
             <a href="#projects">Projects</a>
+            <Link href="/case-study">Case Study</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/resume">Resume</Link>
             <a className="nav-contact" href="#contact">Contact ↗</a>
@@ -159,7 +160,7 @@ export default async function Home() {
               <p className="eyebrow">03 / SELECTED WORK</p>
               <h2>Projects from my <span className="gradient-text">universe.</span></h2>
             </div>
-            <a className="text-link" href="https://github.com/YOUR-Reyu-241">View GitHub ↗</a>
+            <a className="text-link" href="https://github.com/Reyu-241" target="_blank" rel="noreferrer">View GitHub ↗</a>
           </div>
           <div className="project-grid">
             {projects.map((project, index) => (
