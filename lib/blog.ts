@@ -2,32 +2,22 @@ import matter from "gray-matter";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { createClient } from "@/lib/supabase/server";
+import {
+  isBlogPostMetadata,
+  isValidBlogSlug,
+} from "@/lib/blog-validation";
 import type { BlogPost, BlogPostMetadata } from "@/types/blog";
 
 const postsDirectory = path.join(process.cwd(), "content", "blog");
-const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export { isBlogPostMetadata, isValidBlogSlug } from "@/lib/blog-validation";
 
-export function isBlogPostMetadata(
-  value: unknown,
-): value is BlogPostMetadata {
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-
-  const metadata = value as Record<string, unknown>;
-  return (
-    typeof metadata.date === "string" &&
-    Number.isFinite(new Date(metadata.date).getTime()) &&
-    typeof metadata.title === "string" &&
-    metadata.title.trim().length > 0 &&
-    typeof metadata.tagline === "string" &&
-    typeof metadata.preview === "string" &&
-    typeof metadata.image === "string"
-  );
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export function isValidBlogSlug(slug: string): boolean {
-  return slugPattern.test(slug);
+export function isBlogPostsTableMissing(error: { code?: string }) {
+  return error.code === "42P01" || error.code === "PGRST205";
 }
 
 function parsePost(slug: string, source: string): BlogPost {
@@ -60,7 +50,7 @@ function parsePost(slug: string, source: string): BlogPost {
   };
 }
 
-export async function getAllBlogPosts(): Promise<BlogPost[]> {
+async function getFileBlogPosts(): Promise<BlogPost[]> {
   const entries = await readdir(postsDirectory, { withFileTypes: true });
   const slugs = entries
     .filter(
@@ -71,7 +61,7 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
     )
     .map((entry) => entry.name.slice(0, -3));
 
-  const posts = await Promise.all(
+  return Promise.all(
     slugs.map(async (slug) => {
       const source = await readFile(
         path.join(postsDirectory, `${slug}.md`),
@@ -80,8 +70,55 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
       return parsePost(slug, source);
     }),
   );
+}
 
-  return posts.sort((left, right) => right.date.localeCompare(left.date));
+function parseDatabasePost(value: unknown): BlogPost {
+  if (!isRecord(value) || typeof value.slug !== "string") {
+    throw new Error("Saved blog post has an invalid format.");
+  }
+
+  const metadata = {
+    date: value.date,
+    title: value.title,
+    tagline: value.tagline,
+    preview: value.preview,
+    image: value.image,
+  };
+  if (!isBlogPostMetadata(metadata) || typeof value.content !== "string") {
+    throw new Error("Saved blog post has an invalid format.");
+  }
+
+  return {
+    slug: value.slug,
+    ...metadata,
+    content: value.content,
+  };
+}
+
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const filePosts = await getFileBlogPosts();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug, date, title, tagline, preview, image, content")
+    .eq("is_published", true)
+    .order("date", { ascending: false });
+
+  if (error && !isBlogPostsTableMissing(error)) {
+    throw new Error(`Blog posts could not be loaded: ${error.message}`);
+  }
+
+  const posts = error ? [] : (data as unknown[]).map(parseDatabasePost);
+  const postsBySlug = new Map(
+    filePosts.map((post) => [post.slug, post] as const),
+  );
+  for (const post of posts) {
+    postsBySlug.set(post.slug, post);
+  }
+
+  return [...postsBySlug.values()].sort((left, right) =>
+    right.date.localeCompare(left.date),
+  );
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
@@ -89,22 +126,34 @@ export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
     return undefined;
   }
 
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("slug, date, title, tagline, preview, image, content")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (error && !isBlogPostsTableMissing(error)) {
+    throw new Error(`Blog post could not be loaded: ${error.message}`);
+  }
+  if (data) {
+    return parseDatabasePost(data);
+  }
+
   try {
-    const source = await readFile(
-      path.join(postsDirectory, `${slug}.md`),
-      "utf8",
-    );
+    const source = await readFile(path.join(postsDirectory, `${slug}.md`), "utf8");
     return parsePost(slug, source);
-  } catch (error) {
+  } catch (fileError) {
     if (
-      error instanceof Error &&
-      "code" in error &&
-      error.code === "ENOENT"
+      fileError instanceof Error &&
+      "code" in fileError &&
+      fileError.code === "ENOENT"
     ) {
       return undefined;
     }
 
-    throw error;
+    throw fileError;
   }
 }
 

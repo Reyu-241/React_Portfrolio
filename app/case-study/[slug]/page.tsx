@@ -2,21 +2,17 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { caseStudies } from "@/lib/case-studies";
+import { getCaseStudy } from "@/lib/case-studies-server";
 
 type CaseStudyPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return caseStudies.map(({ slug }) => ({ slug }));
-}
-
 export async function generateMetadata({
   params,
 }: CaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const caseStudy = caseStudies.find((item) => item.slug === slug);
+  const caseStudy = await getCaseStudy(slug);
 
   return {
     title: caseStudy
@@ -30,7 +26,7 @@ export default async function CaseStudyDetailPage({
   params,
 }: CaseStudyPageProps) {
   const { slug } = await params;
-  const caseStudy = caseStudies.find((item) => item.slug === slug);
+  const caseStudy = await getCaseStudy(slug);
 
   if (!caseStudy) {
     notFound();

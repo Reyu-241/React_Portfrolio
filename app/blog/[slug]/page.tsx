@@ -2,18 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
-import { getAllBlogPosts, getBlogPost } from "@/lib/blog";
+import { getBlogPost } from "@/lib/blog";
 
 type BlogArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
-
-export const dynamicParams = false;
-
-export async function generateStaticParams() {
-  const posts = await getAllBlogPosts();
-  return posts.map(({ slug }) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

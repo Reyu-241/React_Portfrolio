@@ -18,6 +18,8 @@ export default function AdminShell({
         <nav aria-label="Admin navigation" className="admin-nav">
           <Link href="/admin/homepage">Homepage</Link>
           <Link href="/admin/projects">Projects</Link>
+          <Link href="/admin/case-studies">Case Studies</Link>
+          <Link href="/admin/blog">Blog</Link>
           <Link href="/admin/messages">Commissions</Link>
           <SignOutButton />
         </nav>

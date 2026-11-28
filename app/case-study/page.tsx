@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { caseStudies } from "@/lib/case-studies";
+import { getCaseStudies } from "@/lib/case-studies-server";
 
 export const metadata: Metadata = {
   title: "Case Studies | Personal Portfolio",
   description: "Explore case studies for three selected projects.",
 };
 
-export default function CaseStudiesPage() {
+export default async function CaseStudiesPage() {
+  const caseStudies = await getCaseStudies();
+
   return (
     <main className="site-content case-study case-study-index">
       <Link className="text-link" href="/">

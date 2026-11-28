@@ -19,6 +19,52 @@ export type CaseStudy = {
   }[];
 };
 
+export type CaseStudyContent = Omit<CaseStudy, "slug">;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function isCaseStudyContent(value: unknown): value is CaseStudyContent {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const screenshots = value.screenshots;
+  return (
+    typeof value.number === "string" &&
+    typeof value.title === "string" &&
+    typeof value.summary === "string" &&
+    typeof value.description === "string" &&
+    typeof value.repository === "string" &&
+    Array.isArray(value.technologies) &&
+    value.technologies.every((technology) => typeof technology === "string") &&
+    Array.isArray(value.sections) &&
+    value.sections.length > 0 &&
+    value.sections.every(
+      (section) =>
+        isRecord(section) &&
+        typeof section.heading === "string" &&
+        typeof section.description === "string",
+    ) &&
+    (screenshots === undefined ||
+      (Array.isArray(screenshots) &&
+        screenshots.every(
+          (screenshot) =>
+            isRecord(screenshot) &&
+            typeof screenshot.src === "string" &&
+            typeof screenshot.alt === "string" &&
+            typeof screenshot.caption === "string" &&
+            typeof screenshot.width === "number" &&
+            Number.isFinite(screenshot.width) &&
+            screenshot.width > 0 &&
+            typeof screenshot.height === "number" &&
+            Number.isFinite(screenshot.height) &&
+            screenshot.height > 0,
+        )))
+  );
+}
+
 export const caseStudies: CaseStudy[] = [
   {
     slug: "pokedex",

@@ -42,9 +42,9 @@ on conflict (singleton)
 do update set owner_id = excluded.owner_id;
 ```
 
-Without this configuration, project edits are denied. Published projects are
-readable without signing in; only the configured owner can create, edit, or
-delete projects. Contact submissions allow anonymous inserts, but only the
+Without this configuration, portfolio content edits are denied. Published
+projects are readable without signing in. The configured owner can create, edit,
+or delete projects. Contact submissions allow anonymous inserts, but only the
 configured owner can read them. The database enforces a honeypot field, input
 length limits, and a limit of three submissions per email address in 15 minutes.
 The contact form should submit an empty `website` field as its honeypot. For
@@ -55,11 +55,11 @@ addresses.
 To sign in to the admin area, disable public sign-ups in Supabase Auth settings,
 create or invite your owner account, add its user UUID to
 `private.portfolio_settings` using the SQL above, and open `/admin/login`. Use
-the account's email and password; successful sign-in opens `/admin/projects`,
-where you can create, edit, publish, and delete projects. Use the Contact
-messages link to view submissions. The SQL assignment is the authorization
-control: another authenticated user cannot read contact submissions or change
-projects. Never put a Supabase service-role key in client-side code.
+the account's email and password; successful sign-in opens `/admin/projects`.
+The admin navigation includes project and case-study editors, blog management,
+and the contact-message inbox. Only the configured owner can change projects,
+case studies, or blog posts, or read contact submissions. Never put a Supabase
+service-role key in client-side code.
 
 ## Deployment
 
@@ -67,11 +67,11 @@ This project uses Next.js App Router and can be deployed to Vercel from the repo
 Vercel should use the `npm run build` build command; `package-lock.json` keeps the
 dependency versions consistent between local builds and deployments.
 
-Blog articles are Markdown files in `content/blog/` with frontmatter for
-`date`, `title`, `tagline`, `preview`, and optional `image`. They are read from
-the repository and included when Vercel builds the site. The `/edit` tools and
-their write APIs are development-only; production content changes require a
-repository commit and redeployment.
+Admin-managed blog articles are stored in Supabase and can be created as drafts,
+published, edited, and deleted at `/admin/blog`. Case-study content and blog
+records are protected by row-level security. The `/edit` tools and their
+write APIs are development-only and save local Markdown files under
+`content/blog/`.
 
 ```md
 ---
@@ -95,6 +95,6 @@ part of development.
 
 ## Project status
 
-The portfolio homepage, blog, resume, and local development editors use the
-Next.js App Router. Supabase Auth protects the project-management dashboard and
+The portfolio homepage, blog, resume, and admin editors use the Next.js App
+Router. Supabase Auth protects portfolio content management and the
 contact-message inbox. The public contact form is still under development.
