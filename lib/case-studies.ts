@@ -6,6 +6,13 @@ export type CaseStudy = {
   description: string;
   technologies: string[];
   repository: string;
+  screenshots?: {
+    src: string;
+    alt: string;
+    caption: string;
+    width: number;
+    height: number;
+  }[];
   sections: {
     heading: string;
     description: string;
@@ -22,6 +29,22 @@ export const caseStudies: CaseStudy[] = [
       "A browser-based project exploring how JavaScript, HTML, and CSS work together to create a Pokémon experience.",
     technologies: ["JavaScript", "CSS", "HTML"],
     repository: "https://github.com/Reyu-241/Pokedex",
+    screenshots: [
+      {
+        src: "/images/projects/pokedex-1.png",
+        alt: "Pokémon of South Africa page with filters and Pokémon cards.",
+        caption: "Browse and filter Pokémon",
+        width: 1542,
+        height: 840,
+      },
+      {
+        src: "/images/projects/pokedex-2.png",
+        alt: "Pokémon team builder with selected Pokémon, move selectors, and stats.",
+        caption: "Build a team and choose moves",
+        width: 1157,
+        height: 827,
+      },
+    ],
     sections: [
       {
         heading: "Project overview",
@@ -77,6 +100,22 @@ export const caseStudies: CaseStudy[] = [
       "A clinic management app that helps a small clinic owner manage patient records and appointments, with charts to track patient growth and appointment status.",
     technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL"],
     repository: "https://github.com/Reyu-241/clinic-dashboard",
+    screenshots: [
+      {
+        src: "/images/projects/clinic-1.png",
+        alt: "Clinic appointment booking form with patient and appointment details.",
+        caption: "Book a clinic appointment",
+        width: 705,
+        height: 852,
+      },
+      {
+        src: "/images/projects/clinic-2.png",
+        alt: "Clinic dashboard showing patient and appointment summaries, charts, and quick links.",
+        caption: "Review clinic activity and appointment status",
+        width: 1882,
+        height: 845,
+      },
+    ],
     sections: [
       {
         heading: "The challenge",

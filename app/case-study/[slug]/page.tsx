@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { caseStudies } from "@/lib/case-studies";
@@ -80,6 +81,25 @@ export default async function CaseStudyDetailPage({
           </section>
         ))}
       </article>
+
+      {caseStudy.screenshots && (
+        <section className="case-study-gallery" aria-label="Project screenshots">
+          <h2>Screenshots</h2>
+          <div className="case-study-gallery-grid">
+            {caseStudy.screenshots.map((screenshot) => (
+              <figure className="case-study-screenshot" key={screenshot.src}>
+                <Image
+                  alt={screenshot.alt}
+                  height={screenshot.height}
+                  src={screenshot.src}
+                  width={screenshot.width}
+                />
+                <figcaption>{screenshot.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
