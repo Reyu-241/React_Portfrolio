@@ -23,11 +23,11 @@ const projects = [
     link: "https://github.com/Reyu-241/Yellow-Game",
   },
   {
-    name: "Project Three",
+    name: "Clinic Operations Dashboard",
     description:
-      "Use this card to highlight a project you are especially proud of.",
-    tags: ["Python", "Automation"],
-    link: "https://github.com/YOUR-Reyu-241/YOUR-REPOSITORY",
+      "A clinic management dashboard for patient records, appointments, treatments, and operational insights.",
+    tags: ["Next.js", "Supabase", "TypeScript"],
+    link: "https://github.com/Reyu-241/clinic-dashboard",
   },
 ];
 
